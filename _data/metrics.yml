@@ -1,0 +1,86 @@
+- id: security-org-size
+  title: Security Organization Size
+  icon: people
+  status: active
+  description: "Track the size of your security team relative to engineering and company headcount"
+  
+  controls:
+    - id: security-headcount
+      label: Security Team
+      type: range
+      min: 1
+      max: 500
+      default: 10
+      
+    - id: engineering-headcount
+      label: Engineering/Technology
+      type: range
+      min: 10
+      max: 5000
+      default: 500
+      
+    - id: company-headcount
+      label: Total Company
+      type: range
+      min: 50
+      max: 50000
+      default: 2500
+  
+  results:
+    - id: security-vs-eng-percent
+      label: Security vs Engineering
+      format: percentage
+      benchmark: "Healthy: 1-2%"
+      
+    - id: security-vs-company-percent
+      label: Security vs Company
+      format: percentage
+      benchmark: "Healthy: 1-2%"
+
+- id: vulnerability-management
+  title: Vulnerability Management
+  icon: bug_report
+  status: coming-soon
+  description: "Track your vulnerability remediation metrics, SLA compliance, and program maturity."
+  
+  preview_metrics:
+    - icon: trending_down
+      name: Mean Time to Resolution
+      
+    - icon: schedule
+      name: SLA Compliance Rate
+      
+    - icon: assessment
+      name: Risk Score Trends
+
+- id: security-budget
+  title: Security Budget Analysis
+  icon: account_balance
+  status: coming-soon
+  description: "Analyze security spending patterns, ROI calculations, and budget optimization."
+  
+  preview_metrics:
+    - icon: attach_money
+      name: Budget vs Revenue %
+      
+    - icon: trending_up
+      name: Security ROI Calculator
+      
+    - icon: pie_chart
+      name: Spend Distribution
+
+- id: training-culture
+  title: Security Training & Culture
+  icon: school
+  status: coming-soon
+  description: "Measure security awareness, training completion rates, and culture maturity."
+  
+  preview_metrics:
+    - icon: psychology
+      name: Awareness Score
+      
+    - icon: task_alt
+      name: Training Completion
+      
+    - icon: groups
+      name: Culture Maturity Index 

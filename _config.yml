@@ -1,0 +1,39 @@
+title: Security Program Scorecards
+description: Assess your security program health with interactive metrics
+url: "https://awurster.github.io"
+baseurl: "/security-program-scorecards"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+sass:
+  sass_dir: _sass
+  style: compressed
+
+# Collections
+collections:
+  metrics:
+    output: false
+
+# Plugins
+plugins:
+  - jekyll-sass-converter
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Exclude from processing
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+
+# Site settings
+author: Andrew Wurster
+email: your-email@domain.com
+github_username: awurster
+
+# Theme settings
+theme_color: "#f7df1e"
+background_color: "#0d1117" 

@@ -1,0 +1,56 @@
+{% assign metric = include.metric %}
+
+<div class="metric-card {% if metric.status == 'coming-soon' %}placeholder-card{% endif %}" {% if
+    metric.status=='active' %}id="{{ metric.id }}-card" {% endif %}>
+
+    <div class="card-header">
+        <span class="material-icons">{{ metric.icon }}</span>
+        <h3>{{ metric.title }}</h3>
+        {% if metric.status == 'coming-soon' %}
+        <span class="coming-soon">Coming Soon</span>
+        {% endif %}
+    </div>
+
+    {% if metric.status == 'active' %}
+    <!-- Active Metric Controls -->
+    <div class="metric-controls">
+        {% for control in metric.controls %}
+        <div class="slider-group">
+            <label for="{{ control.id }}">{{ control.label }}</label>
+            <div class="slider-container">
+                <input type="range" id="{{ control.id }}" min="{{ control.min }}" max="{{ control.max }}"
+                    value="{{ control.default }}" class="slider">
+                <input type="number" id="{{ control.id }}-input" min="{{ control.min }}" max="{{ control.max }}"
+                    value="{{ control.default }}" class="number-input">
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="results">
+        {% for result in metric.results %}
+        <div class="result-item">
+            <div class="result-value" id="{{ result.id }}">
+                {% if result.format == 'percentage' %}2.0%{% endif %}
+            </div>
+            <div class="result-label">{{ result.label }}</div>
+            <div class="benchmark" id="{{ result.id }}-benchmark">{{ result.benchmark }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <!-- Coming Soon Placeholder -->
+    <div class="placeholder-content">
+        <p>{{ metric.description }}</p>
+        <div class="placeholder-metrics">
+            {% for preview in metric.preview_metrics %}
+            <div class="placeholder-item">
+                <span class="material-icons">{{ preview.icon }}</span>
+                <span>{{ preview.name }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>

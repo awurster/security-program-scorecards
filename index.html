@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Program Scorecards</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="material-icons">security</span>
+                    <h1>Security Program Scorecards</h1>
+                </div>
+                <p class="tagline">Assess your security program health with interactive metrics</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section class="hero">
+                <h2>Build better security programs,<br>one metric at a time</h2>
+                <p>Quickly assess your security organization's health and benchmarks</p>
+            </section>
+
+            <div class="metrics-grid">
+                <!-- Security Org Size Card -->
+                <div class="metric-card" id="security-org-card">
+                    <div class="card-header">
+                        <span class="material-icons">people</span>
+                        <h3>Security Organization Size</h3>
+                    </div>
+
+                    <div class="metric-controls">
+                        <div class="slider-group">
+                            <label for="security-headcount">Security Team</label>
+                            <div class="slider-container">
+                                <input type="range" id="security-headcount" min="1" max="500" value="10" class="slider">
+                                <input type="number" id="security-headcount-input" min="1" max="500" value="10"
+                                    class="number-input">
+                            </div>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="engineering-headcount">Engineering/Technology</label>
+                            <div class="slider-container">
+                                <input type="range" id="engineering-headcount" min="10" max="5000" value="500"
+                                    class="slider">
+                                <input type="number" id="engineering-headcount-input" min="10" max="5000" value="500"
+                                    class="number-input">
+                            </div>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="company-headcount">Total Company</label>
+                            <div class="slider-container">
+                                <input type="range" id="company-headcount" min="50" max="50000" value="2500"
+                                    class="slider">
+                                <input type="number" id="company-headcount-input" min="50" max="50000" value="2500"
+                                    class="number-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results">
+                        <div class="result-item">
+                            <div class="result-value" id="security-vs-eng-percent">2.0%</div>
+                            <div class="result-label">Security vs Engineering</div>
+                            <div class="benchmark" id="security-vs-eng-benchmark">Healthy: 1-2%</div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-value" id="security-vs-company-percent">0.4%</div>
+                            <div class="result-label">Security vs Company</div>
+                            <div class="benchmark" id="security-vs-company-benchmark">Typical: 0.2-0.8%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vulnerability Management Program Card (Placeholder) -->
+                <div class="metric-card placeholder-card">
+                    <div class="card-header">
+                        <span class="material-icons">bug_report</span>
+                        <h3>Vulnerability Management</h3>
+                        <span class="coming-soon">Coming Soon</span>
+                    </div>
+                    <div class="placeholder-content">
+                        <p>Track your vulnerability remediation metrics, SLA compliance, and program maturity.</p>
+                        <div class="placeholder-metrics">
+                            <div class="placeholder-item">
+                                <span class="material-icons">trending_down</span>
+                                <span>Mean Time to Resolution</span>
+                            </div>
+                            <div class="placeholder-item">
+                                <span class="material-icons">schedule</span>
+                                <span>SLA Compliance Rate</span>
+                            </div>
+                            <div class="placeholder-item">
+                                <span class="material-icons">assessment</span>
+                                <span>Risk Score Trends</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Budget Card (Placeholder) -->
+                <div class="metric-card placeholder-card">
+                    <div class="card-header">
+                        <span class="material-icons">account_balance</span>
+                        <h3>Security Budget Analysis</h3>
+                        <span class="coming-soon">Coming Soon</span>
+                    </div>
+                    <div class="placeholder-content">
+                        <p>Analyze security spending patterns, ROI calculations, and budget optimization.</p>
+                        <div class="placeholder-metrics">
+                            <div class="placeholder-item">
+                                <span class="material-icons">attach_money</span>
+                                <span>Budget vs Revenue %</span>
+                            </div>
+                            <div class="placeholder-item">
+                                <span class="material-icons">trending_up</span>
+                                <span>Security ROI Calculator</span>
+                            </div>
+                            <div class="placeholder-item">
+                                <span class="material-icons">pie_chart</span>
+                                <span>Spend Distribution</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Training & Culture Card (Placeholder) -->
+                <div class="metric-card placeholder-card">
+                    <div class="card-header">
+                        <span class="material-icons">school</span>
+                        <h3>Security Training & Culture</h3>
+                        <span class="coming-soon">Coming Soon</span>
+                    </div>
+                    <div class="placeholder-content">
+                        <p>Measure security awareness, training completion rates, and culture maturity.</p>
+                        <div class="placeholder-metrics">
+                            <div class="placeholder-item">
+                                <span class="material-icons">psychology</span>
+                                <span>Awareness Score</span>
+                            </div>
+                            <div class="placeholder-item">
+                                <span class="material-icons">task_alt</span>
+                                <span>Training Completion</span>
+                            </div>
+                            <div class="placeholder-item">
+                                <span class="material-icons">groups</span>
+                                <span>Culture Maturity Index</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Security Program Scorecards. Built for security leaders.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
