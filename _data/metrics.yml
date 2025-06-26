@@ -25,7 +25,7 @@
 
 - id: security-org-size
   title: Organization Size
-  icon: people
+  icon: tenancy
   status: active
   description: "Track the size and efficiency of your security team relative to your organization"
   
@@ -353,4 +353,4 @@
 # 2. Add corresponding benchmark data in benchmarks.yml
 # 3. Update the JavaScript calculator in assets/js/calculator.js
 # 4. Test thoroughly with various input ranges
-# ============================================================================= 
+# ============================================================================= # Test change

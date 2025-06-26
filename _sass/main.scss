@@ -18,14 +18,15 @@
     --text-muted: #656d76;
 
     /* Neon Yellow Accent */
-    --accent-primary: #f7df1e;
-    --accent-glow: #ffff00;
-    --accent-muted: #d4c619;
+    // --accent-primary: #fff87c;
+    --accent-primary: #e5ff00;
+    --accent-glow: #46432a;
+    --accent-muted: #d6dca1;
 
     /* Status Colors */
     --success: #238636;
     --warning: #d29922;
-    --danger: #da3633;
+    --danger: #a0110f;
 
     /* Cursor AI Inspired */
     --glass-bg: rgba(33, 38, 45, 0.8);
@@ -176,9 +177,9 @@ input,
 }
 
 .metric-card:hover {
-    border-color: var(--accent-primary);
+    border-color: var(--accent-muted);
     box-shadow:
-        0 0 0 2px rgba(247, 223, 30, 0.3),
+        0 0 0 4px rgba(247, 223, 30, 0.1),
         0 4px 16px rgba(247, 223, 30, 0.1);
 }
 
@@ -503,3 +504,5 @@ button:focus,
         padding: 16px;
     }
 }
+
+/* Test change */
