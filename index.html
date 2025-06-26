@@ -31,8 +31,8 @@
             </section>
 
             <div class="metrics-grid">
-                <!-- Security Org Size Card -->
-                <div class="metric-card" id="security-org-card">
+                <!-- Security Organization Size Card -->
+                <div class="metric-card" id="security-org-size-card">
                     <div class="card-header">
                         <span class="material-icons">people</span>
                         <h3>Security Organization Size</h3>
@@ -42,9 +42,10 @@
                         <div class="slider-group">
                             <label for="security-headcount">Security Team</label>
                             <div class="slider-container">
-                                <input type="range" id="security-headcount" min="1" max="500" value="10" class="slider">
+                                <input type="range" id="security-headcount" min="1" max="500" value="10" class="slider"
+                                    data-metric="security-org-size">
                                 <input type="number" id="security-headcount-input" min="1" max="500" value="10"
-                                    class="number-input">
+                                    class="number-input" data-metric="security-org-size">
                             </div>
                         </div>
 
@@ -52,9 +53,9 @@
                             <label for="engineering-headcount">Engineering/Technology</label>
                             <div class="slider-container">
                                 <input type="range" id="engineering-headcount" min="10" max="5000" value="500"
-                                    class="slider">
+                                    class="slider" data-metric="security-org-size">
                                 <input type="number" id="engineering-headcount-input" min="10" max="5000" value="500"
-                                    class="number-input">
+                                    class="number-input" data-metric="security-org-size">
                             </div>
                         </div>
 
@@ -62,9 +63,29 @@
                             <label for="company-headcount">Total Company</label>
                             <div class="slider-container">
                                 <input type="range" id="company-headcount" min="50" max="50000" value="2500"
-                                    class="slider">
+                                    class="slider" data-metric="security-org-size">
                                 <input type="number" id="company-headcount-input" min="50" max="50000" value="2500"
-                                    class="number-input">
+                                    class="number-input" data-metric="security-org-size">
+                            </div>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="end-users">Total End Users</label>
+                            <div class="slider-container">
+                                <input type="range" id="end-users" min="100" max="10000000" value="25000" class="slider"
+                                    data-metric="security-org-size">
+                                <input type="number" id="end-users-input" min="100" max="10000000" value="25000"
+                                    class="number-input" data-metric="security-org-size">
+                            </div>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="data-records">Data Records (millions)</label>
+                            <div class="slider-container">
+                                <input type="range" id="data-records" min="1" max="1000" value="50" class="slider"
+                                    data-metric="security-org-size">
+                                <input type="number" id="data-records-input" min="1" max="1000" value="50"
+                                    class="number-input" data-metric="security-org-size">
                             </div>
                         </div>
                     </div>
@@ -73,91 +94,273 @@
                         <div class="result-item">
                             <div class="result-value" id="security-vs-eng-percent">2.0%</div>
                             <div class="result-label">Security vs Engineering</div>
-                            <div class="benchmark" id="security-vs-eng-benchmark">Healthy: 1-2%</div>
+                            <div class="benchmark" id="security-vs-eng-percent-benchmark">Healthy: 1-2.5</div>
                         </div>
 
                         <div class="result-item">
                             <div class="result-value" id="security-vs-company-percent">0.4%</div>
                             <div class="result-label">Security vs Company</div>
-                            <div class="benchmark" id="security-vs-company-benchmark">Typical: 0.2-0.8%</div>
+                            <div class="benchmark" id="security-vs-company-percent-benchmark">Healthy: 1-2</div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-value" id="users-per-security-person">2500</div>
+                            <div class="result-label">Users per Security Person</div>
+                            <div class="benchmark" id="users-per-security-person-benchmark">Healthy: 50-400</div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-value" id="records-per-security-person">5.0 M</div>
+                            <div class="result-label">Data Records per Security Person (M)</div>
+                            <div class="benchmark" id="records-per-security-person-benchmark">Calculating...</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Vulnerability Management Program Card (Placeholder) -->
-                <div class="metric-card placeholder-card">
+                <!-- Vulnerability Management Card -->
+                <div class="metric-card" id="vulnerability-management-card">
                     <div class="card-header">
                         <span class="material-icons">bug_report</span>
                         <h3>Vulnerability Management</h3>
-                        <span class="coming-soon">Coming Soon</span>
                     </div>
-                    <div class="placeholder-content">
-                        <p>Track your vulnerability remediation metrics, SLA compliance, and program maturity.</p>
-                        <div class="placeholder-metrics">
-                            <div class="placeholder-item">
-                                <span class="material-icons">trending_down</span>
-                                <span>Mean Time to Resolution</span>
+
+                    <div class="metric-controls">
+                        <div class="slider-group">
+                            <label for="num-repos">Code Repositories</label>
+                            <div class="slider-container">
+                                <input type="range" id="num-repos" min="1" max="10000" value="250" class="slider"
+                                    data-metric="vulnerability-management">
+                                <input type="number" id="num-repos-input" min="1" max="10000" value="250"
+                                    class="number-input" data-metric="vulnerability-management">
                             </div>
-                            <div class="placeholder-item">
-                                <span class="material-icons">schedule</span>
-                                <span>SLA Compliance Rate</span>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="active-vulns">All Active Vulnerabilities</label>
+                            <div class="slider-container">
+                                <input type="range" id="active-vulns" min="0" max="10000" value="850" class="slider"
+                                    data-metric="vulnerability-management">
+                                <input type="number" id="active-vulns-input" min="0" max="10000" value="850"
+                                    class="number-input" data-metric="vulnerability-management">
                             </div>
-                            <div class="placeholder-item">
-                                <span class="material-icons">assessment</span>
-                                <span>Risk Score Trends</span>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="exploitable-vulns">Active Exploitable Vulns</label>
+                            <div class="slider-container">
+                                <input type="range" id="exploitable-vulns" min="0" max="1000" value="45" class="slider"
+                                    data-metric="vulnerability-management">
+                                <input type="number" id="exploitable-vulns-input" min="0" max="1000" value="45"
+                                    class="number-input" data-metric="vulnerability-management">
                             </div>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="vulns-past-sla">Vulnerabilities Past SLA</label>
+                            <div class="slider-container">
+                                <input type="range" id="vulns-past-sla" min="0" max="1000" value="12" class="slider"
+                                    data-metric="vulnerability-management">
+                                <input type="number" id="vulns-past-sla-input" min="0" max="1000" value="12"
+                                    class="number-input" data-metric="vulnerability-management">
+                            </div>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="avg-days-open">Average Days Open</label>
+                            <div class="slider-container">
+                                <input type="range" id="avg-days-open" min="1" max="365" value="45" class="slider"
+                                    data-metric="vulnerability-management">
+                                <input type="number" id="avg-days-open-input" min="1" max="365" value="45"
+                                    class="number-input" data-metric="vulnerability-management">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results">
+                        <div class="result-item">
+                            <div class="result-value" id="sla-compliance-rate">98.6%</div>
+                            <div class="result-label">SLA Compliance Rate</div>
+                            <div class="benchmark" id="sla-compliance-rate-benchmark">Healthy: 85-100</div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-value" id="vulns-per-repo">3.4</div>
+                            <div class="result-label">Vulnerabilities per Repository</div>
+                            <div class="benchmark" id="vulns-per-repo-benchmark">Calculating...</div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-value" id="exploitable-percentage">5.3%</div>
+                            <div class="result-label">Exploitable Vulnerability Rate</div>
+                            <div class="benchmark" id="exploitable-percentage-benchmark">Calculating...</div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-value" id="mean-time-to-fix">45.0 days</div>
+                            <div class="result-label">Mean Time to Fix (days)</div>
+                            <div class="benchmark" id="mean-time-to-fix-benchmark">Healthy: 0-30</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Security Budget Card (Placeholder) -->
-                <div class="metric-card placeholder-card">
+                <!-- Security Budget Card -->
+                <div class="metric-card" id="security-budget-card">
                     <div class="card-header">
                         <span class="material-icons">account_balance</span>
                         <h3>Security Budget Analysis</h3>
-                        <span class="coming-soon">Coming Soon</span>
                     </div>
-                    <div class="placeholder-content">
-                        <p>Analyze security spending patterns, ROI calculations, and budget optimization.</p>
-                        <div class="placeholder-metrics">
-                            <div class="placeholder-item">
-                                <span class="material-icons">attach_money</span>
-                                <span>Budget vs Revenue %</span>
+
+                    <div class="metric-controls">
+                        <div class="slider-group">
+                            <label for="security-budget">Annual Security Budget ($M)</label>
+                            <div class="slider-container">
+                                <input type="range" id="security-budget" min="0.1" max="100" value="2.5" step="0.1"
+                                    class="slider" data-metric="security-budget">
+                                <input type="number" id="security-budget-input" min="0.1" max="100" value="2.5"
+                                    step="0.1" class="number-input" data-metric="security-budget">
                             </div>
-                            <div class="placeholder-item">
-                                <span class="material-icons">trending_up</span>
-                                <span>Security ROI Calculator</span>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="annual-revenue">Annual Revenue ($M)</label>
+                            <div class="slider-container">
+                                <input type="range" id="annual-revenue" min="1" max="10000" value="250" class="slider"
+                                    data-metric="security-budget">
+                                <input type="number" id="annual-revenue-input" min="1" max="10000" value="250"
+                                    class="number-input" data-metric="security-budget">
                             </div>
-                            <div class="placeholder-item">
-                                <span class="material-icons">pie_chart</span>
-                                <span>Spend Distribution</span>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="operating-costs">Annual Operating Costs ($M)</label>
+                            <div class="slider-container">
+                                <input type="range" id="operating-costs" min="1" max="1000" value="50" class="slider"
+                                    data-metric="security-budget">
+                                <input type="number" id="operating-costs-input" min="1" max="1000" value="50"
+                                    class="number-input" data-metric="security-budget">
                             </div>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="total-employees">Total Employees</label>
+                            <div class="slider-container">
+                                <input type="range" id="total-employees" min="10" max="50000" value="2500"
+                                    class="slider" data-metric="security-budget">
+                                <input type="number" id="total-employees-input" min="10" max="50000" value="2500"
+                                    class="number-input" data-metric="security-budget">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results">
+                        <div class="result-item">
+                            <div class="result-value" id="budget-vs-revenue">1.0%</div>
+                            <div class="result-label">Budget vs Revenue</div>
+                            <div class="benchmark" id="budget-vs-revenue-benchmark">Healthy: 1-3</div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-value" id="budget-vs-opex">5.0%</div>
+                            <div class="result-label">Budget vs Operating Costs</div>
+                            <div class="benchmark" id="budget-vs-opex-benchmark">Calculating...</div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-value" id="budget-per-employee">$1,000</div>
+                            <div class="result-label">Budget per Employee</div>
+                            <div class="benchmark" id="budget-per-employee-benchmark">Healthy: 2000-5000</div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-value" id="cost-per-end-user">$100</div>
+                            <div class="result-label">Cost per End User</div>
+                            <div class="benchmark" id="cost-per-end-user-benchmark">Calculating...</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Training & Culture Card (Placeholder) -->
-                <div class="metric-card placeholder-card">
+                <!-- Training & Culture Card -->
+                <div class="metric-card" id="training-culture-card">
                     <div class="card-header">
                         <span class="material-icons">school</span>
                         <h3>Security Training & Culture</h3>
-                        <span class="coming-soon">Coming Soon</span>
                     </div>
-                    <div class="placeholder-content">
-                        <p>Measure security awareness, training completion rates, and culture maturity.</p>
-                        <div class="placeholder-metrics">
-                            <div class="placeholder-item">
-                                <span class="material-icons">psychology</span>
-                                <span>Awareness Score</span>
+
+                    <div class="metric-controls">
+                        <div class="slider-group">
+                            <label for="training-budget">Annual Training Budget ($K)</label>
+                            <div class="slider-container">
+                                <input type="range" id="training-budget" min="10" max="5000" value="250" class="slider"
+                                    data-metric="training-culture">
+                                <input type="number" id="training-budget-input" min="10" max="5000" value="250"
+                                    class="number-input" data-metric="training-culture">
                             </div>
-                            <div class="placeholder-item">
-                                <span class="material-icons">task_alt</span>
-                                <span>Training Completion</span>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="employees-trained">Employees Completed Training</label>
+                            <div class="slider-container">
+                                <input type="range" id="employees-trained" min="10" max="50000" value="2200"
+                                    class="slider" data-metric="training-culture">
+                                <input type="number" id="employees-trained-input" min="10" max="50000" value="2200"
+                                    class="number-input" data-metric="training-culture">
                             </div>
-                            <div class="placeholder-item">
-                                <span class="material-icons">groups</span>
-                                <span>Culture Maturity Index</span>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="total-training-employees">Total Employees (Training Target)</label>
+                            <div class="slider-container">
+                                <input type="range" id="total-training-employees" min="10" max="50000" value="2500"
+                                    class="slider" data-metric="training-culture">
+                                <input type="number" id="total-training-employees-input" min="10" max="50000"
+                                    value="2500" class="number-input" data-metric="training-culture">
                             </div>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="phishing-tests-sent">Phishing Tests Sent</label>
+                            <div class="slider-container">
+                                <input type="range" id="phishing-tests-sent" min="100" max="100000" value="12000"
+                                    class="slider" data-metric="training-culture">
+                                <input type="number" id="phishing-tests-sent-input" min="100" max="100000" value="12000"
+                                    class="number-input" data-metric="training-culture">
+                            </div>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="phishing-failures">Phishing Test Failures</label>
+                            <div class="slider-container">
+                                <input type="range" id="phishing-failures" min="0" max="10000" value="720"
+                                    class="slider" data-metric="training-culture">
+                                <input type="number" id="phishing-failures-input" min="0" max="10000" value="720"
+                                    class="number-input" data-metric="training-culture">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results">
+                        <div class="result-item">
+                            <div class="result-value" id="training-cost-per-employee">$100</div>
+                            <div class="result-label">Training Cost per Employee</div>
+                            <div class="benchmark" id="training-cost-per-employee-benchmark">Calculating...</div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-value" id="training-completion-rate">88.0%</div>
+                            <div class="result-label">Training Completion Rate</div>
+                            <div class="benchmark" id="training-completion-rate-benchmark">Healthy: 90-100</div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-value" id="phishing-failure-rate">6.0%</div>
+                            <div class="result-label">Phishing Failure Rate</div>
+                            <div class="benchmark" id="phishing-failure-rate-benchmark">Healthy: 0-5</div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-value" id="security-awareness-score">94/100</div>
+                            <div class="result-label">Security Awareness Score</div>
+                            <div class="benchmark" id="security-awareness-score-benchmark">Calculating...</div>
                         </div>
                     </div>
                 </div>
