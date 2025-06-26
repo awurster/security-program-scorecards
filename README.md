@@ -4,7 +4,7 @@ A modern, interactive web application for assessing security program health metr
 
 ## 🚀 Live Demo
 
-Visit the live application: [Security Program Scorecards](https://your-username.github.io/security-program-scorecards)
+Visit the live application: [Security Program Scorecards](https://awurster.github.io/security-program-scorecards)
 
 ## ✨ Features
 
@@ -23,7 +23,7 @@ Visit the live application: [Security Program Scorecards](https://your-username.
 
 **Calculated Ratios:**
 - Security vs Engineering percentage (Healthy: 1-2%)
-- Security vs Company percentage (Healthy: 0.2-0.8%)
+- Security vs Company percentage (Healthy: 1-2%)
 
 ### Coming Soon
 - 🐛 **Vulnerability Management Program**: Track remediation metrics and SLA compliance
@@ -48,7 +48,7 @@ Visit the live application: [Security Program Scorecards](https://your-username.
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/security-program-scorecards.git
+   git clone https://github.com/awurster/security-program-scorecards.git
    cd security-program-scorecards
    ```
 
@@ -76,7 +76,7 @@ Visit the live application: [Security Program Scorecards](https://your-username.
 
 2. **Your site will be available at:**
    ```
-   https://your-username.github.io/security-program-scorecards
+   https://awurster.github.io/security-program-scorecards
    ```
 
 ## 🎮 Usage
@@ -107,7 +107,7 @@ This application follows Material Design principles with:
 
 Contributions are welcome! Here's how you can help:
 
-1. **Report Issues**: Found a bug? [Create an issue](https://github.com/your-username/security-program-scorecards/issues)
+1. **Report Issues**: Found a bug? [Create an issue](https://github.com/awurster/security-program-scorecards/issues)
 2. **Suggest Features**: Have ideas for new metrics? Let us know!
 3. **Submit Pull Requests**: 
    - Fork the repository
@@ -138,8 +138,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/your-username/security-program-scorecards/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-username/security-program-scorecards/discussions)
+- **Issues**: [GitHub Issues](https://github.com/awurster/security-program-scorecards/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/awurster/security-program-scorecards/discussions)
 
 ---
 
