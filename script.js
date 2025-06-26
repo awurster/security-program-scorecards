@@ -183,8 +183,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function syncSliderAndInput(slider, input, metricId) {
         const config = logScaleConfig[slider.id];
+        let isUserTyping = false;
+        let typingTimeout;
 
         slider.addEventListener('input', function () {
+            if (isUserTyping) return; // Don't update input while user is typing
+
             if (config && config.useLog) {
                 const linearValue = logToLinear(parseFloat(slider.value), config.min, config.max);
                 input.value = linearValue;
@@ -195,34 +199,85 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         input.addEventListener('input', function () {
+            isUserTyping = true;
+
+            // Clear any existing timeout
+            if (typingTimeout) {
+                clearTimeout(typingTimeout);
+            }
+
             // Allow empty input for user editing
-            if (input.value === '') return;
+            if (input.value === '') {
+                // Set a timeout to handle the empty state
+                typingTimeout = setTimeout(() => {
+                    isUserTyping = false;
+                    if (input.value === '') {
+                        // If still empty after delay, set to minimum value
+                        if (config && config.useLog) {
+                            input.value = config.min;
+                            slider.value = linearToLog(config.min, config.min, config.max);
+                        } else {
+                            const min = parseFloat(slider.getAttribute('data-original-min') || slider.min);
+                            input.value = min;
+                            slider.value = min;
+                        }
+                        calculateMetric(metricId);
+                    }
+                }, 1000); // Wait 1 second before auto-filling
+                return;
+            }
 
             let value = parseFloat(input.value);
-            if (isNaN(value)) return;
+            if (isNaN(value)) {
+                // Set a timeout to handle invalid input
+                typingTimeout = setTimeout(() => {
+                    isUserTyping = false;
+                    if (isNaN(parseFloat(input.value))) {
+                        // Reset to previous valid value
+                        if (config && config.useLog) {
+                            const currentValue = logToLinear(parseFloat(slider.value), config.min, config.max);
+                            input.value = currentValue;
+                        } else {
+                            input.value = slider.value;
+                        }
+                        calculateMetric(metricId);
+                    }
+                }, 500);
+                return;
+            }
 
             if (config && config.useLog) {
-                // Clamp to valid range
-                if (value < config.min) value = config.min;
-                if (value > config.max) value = config.max;
+                // Only clamp if the value is way outside bounds
+                if (value < config.min * 0.1) value = config.min;
+                if (value > config.max * 10) value = config.max;
 
-                input.value = value;
                 slider.value = linearToLog(value, config.min, config.max);
             } else {
                 const min = parseFloat(slider.getAttribute('data-original-min') || slider.min);
                 const max = parseFloat(slider.getAttribute('data-original-max') || slider.max);
 
-                if (value < min) value = min;
-                if (value > max) value = max;
+                // Only clamp if the value is way outside bounds
+                if (value < min * 0.1) value = min;
+                if (value > max * 10) value = max;
 
-                input.value = value;
                 slider.value = value;
             }
 
-            calculateMetric(metricId);
+            // Set a short timeout before calculating to allow for continued typing
+            typingTimeout = setTimeout(() => {
+                isUserTyping = false;
+                calculateMetric(metricId);
+            }, 300);
         });
 
         input.addEventListener('blur', function () {
+            isUserTyping = false;
+
+            // Clear any pending timeout
+            if (typingTimeout) {
+                clearTimeout(typingTimeout);
+            }
+
             let value = parseFloat(input.value);
 
             if (config && config.useLog) {
@@ -251,6 +306,14 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             calculateMetric(metricId);
+        });
+
+        input.addEventListener('focus', function () {
+            isUserTyping = true;
+            // Clear any pending timeout when user starts editing
+            if (typingTimeout) {
+                clearTimeout(typingTimeout);
+            }
         });
     }
 
