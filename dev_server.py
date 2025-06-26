@@ -1,170 +1,64 @@
+#!/usr/bin/env python3
+"""
+Simple Jekyll-like development server
+Processes YAML data files and templates, serves with auto-reload
+"""
 
+import os
+import yaml
+import json
+import time
+import threading
+from http.server import HTTPServer, SimpleHTTPRequestHandler
+import socketserver
+
+class TemplateProcessor:
+    def __init__(self):
+        self.data = {}
+        self.load_data()
+    
+    def load_data(self):
+        """Load all YAML data files"""
+        data_dir = '_data'
+        if os.path.exists(data_dir):
+            for filename in os.listdir(data_dir):
+                if filename.endswith('.yml') or filename.endswith('.yaml'):
+                    filepath = os.path.join(data_dir, filename)
+                    with open(filepath, 'r') as f:
+                        key = filename.split('.')[0]
+                        self.data[key] = yaml.safe_load(f)
+        print(f"Loaded data: {list(self.data.keys())}")
+    
+    def generate_calculator_js(self):
+        """Generate JavaScript calculator with embedded YAML data"""
+        js_content = f'''
 // Auto-generated Security Program Calculator from YAML data
-document.addEventListener('DOMContentLoaded', function () {
-    // Embedded benchmark data from YAML files
-    const benchmarks = {
-    "security_team_ratio": {
-        "engineering": {
-            "healthy": "{ min: 1.0, max: 2.5 }",
-            "warning": "{ min: 0.5, max: 1.0 }",
-            "critical": "{ min: 0.0, max: 0.5 }"
-        },
-        "company": {
-            "healthy": "{ min: 1.0, max: 2.0 }",
-            "warning": "{ min: 0.5, max: 1.0 }",
-            "critical": "{ min: 0.0, max: 0.5 }"
-        }
-    },
-    "users_per_security_person": {
-        "startup": {
-            "healthy": "{ min: 50, max: 200 }",
-            "warning": "{ min: 200, max: 500 }",
-            "critical": "{ min: 500, max: 1000 }"
-        },
-        "enterprise": {
-            "healthy": "{ min: 100, max: 400 }",
-            "warning": "{ min: 400, max: 800 }",
-            "critical": "{ min: 800, max: 2000 }"
-        }
-    },
-    "records_per_security_person": {
-        "startup": {
-            "healthy": "{ min: 1, max: 5 }      # millions of records",
-            "warning": "{ min: 5, max: 15 }",
-            "critical": "{ min: 15, max: 50 }"
-        },
-        "enterprise": {
-            "healthy": "{ min: 2, max: 10 }",
-            "warning": "{ min: 10, max: 30 }",
-            "critical": "{ min: 30, max: 100 }"
-        }
-    },
-    "users_per_customer": {
-        "saas_b2b": {
-            "healthy": "{ min: 2, max: 10 }      # users per customer account",
-            "warning": "{ min: 10, max: 50 }",
-            "critical": "{ min: 50, max: 200 }"
-        },
-        "consumer": {
-            "healthy": "{ min: 1, max: 2 }",
-            "warning": "{ min: 2, max: 5 }",
-            "critical": "{ min: 5, max: 20 }"
-        }
-    },
-    "records_per_customer": {
-        "saas_b2b": {
-            "healthy": "{ min: 1, max: 10 }      # thousands of records per customer",
-            "warning": "{ min: 10, max: 50 }",
-            "critical": "{ min: 50, max: 200 }"
-        },
-        "data_heavy": {
-            "healthy": "{ min: 10, max: 100 }",
-            "warning": "{ min: 100, max: 500 }",
-            "critical": "{ min: 500, max: 2000 }"
-        }
-    },
-    "data_density_score": {
-        "healthy": "{ min: 70, max: 100 }       # composite score of data efficiency",
-        "warning": "{ min: 40, max: 70 }",
-        "critical": "{ min: 0, max: 40 }"
-    },
-    "vuln_sla_compliance": {
-        "healthy": "{ min: 90, max: 100 }",
-        "warning": "{ min: 75, max: 90 }",
-        "critical": "{ min: 0, max: 75 }"
-    },
-    "vulns_per_repo": {
-        "healthy": "{ min: 0, max: 5 }        # vulnerabilities per repository",
-        "warning": "{ min: 5, max: 15 }",
-        "critical": "{ min: 15, max: 50 }"
-    },
-    "exploitable_vuln_rate": {
-        "healthy": "{ min: 0, max: 10 }       # percentage of vulns that are exploitable",
-        "warning": "{ min: 10, max: 25 }",
-        "critical": "{ min: 25, max: 50 }"
-    },
-    "mean_time_to_fix": {
-        "healthy": "{ min: 0, max: 30 }       # days",
-        "warning": "{ min: 30, max: 90 }",
-        "critical": "{ min: 90, max: 180 }"
-    },
-    "budget_per_employee": {
-        "technology": {
-            "healthy": "{ min: 2000, max: 5000 }  # USD per year",
-            "warning": "{ min: 1000, max: 2000 }",
-            "critical": "{ min: 0, max: 1000 }"
-        },
-        "financial": {
-            "healthy": "{ min: 3000, max: 8000 }",
-            "warning": "{ min: 1500, max: 3000 }",
-            "critical": "{ min: 0, max: 1500 }"
-        }
-    },
-    "budget_vs_revenue": {
-        "healthy": "{ min: 1.0, max: 3.0 }      # percentage",
-        "warning": "{ min: 0.5, max: 1.0 }",
-        "critical": "{ min: 0.0, max: 0.5 }"
-    },
-    "budget_vs_opex": {
-        "healthy": "{ min: 2.0, max: 8.0 }      # percentage of operating costs",
-        "warning": "{ min: 1.0, max: 2.0 }",
-        "critical": "{ min: 0.0, max: 1.0 }"
-    },
-    "cost_per_end_user": {
-        "saas": {
-            "healthy": "{ min: 5, max: 25 }       # USD per end user per year",
-            "warning": "{ min: 25, max: 100 }",
-            "critical": "{ min: 100, max: 500 }"
-        },
-        "enterprise": {
-            "healthy": "{ min: 10, max: 50 }",
-            "warning": "{ min: 50, max: 200 }",
-            "critical": "{ min: 200, max: 1000 }"
-        }
-    },
-    "training_cost_per_employee": {
-        "healthy": "{ min: 200, max: 500 }      # USD per year",
-        "warning": "{ min: 100, max: 200 }",
-        "critical": "{ min: 0, max: 100 }"
-    },
-    "training_completion_rate": {
-        "healthy": "{ min: 90, max: 100 }       # percentage",
-        "warning": "{ min: 75, max: 90 }",
-        "critical": "{ min: 0, max: 75 }"
-    },
-    "phishing_failure_rate": {
-        "healthy": "{ min: 0, max: 5 }          # percentage (lower is better)",
-        "warning": "{ min: 5, max: 15 }",
-        "critical": "{ min: 15, max: 50 }"
-    },
-    "security_awareness_score": {
-        "healthy": "{ min: 80, max: 100 }       # composite awareness score",
-        "warning": "{ min: 60, max: 80 }",
-        "critical": "{ min: 0, max: 60 }"
-    }
-};
+document.addEventListener('DOMContentLoaded', function () {{
+    // Embedded data from YAML files
+    const yamlData = {json.dumps(self.data, indent=4)};
+    const benchmarks = yamlData.benchmarks?.benchmarks || {{}};
     
     // Browser shortcuts handling
-    document.addEventListener('keydown', function (e) {
-        if (e.metaKey || e.ctrlKey) { return true; }
-    });
+    document.addEventListener('keydown', function (e) {{
+        if (e.metaKey || e.ctrlKey) {{ return true; }}
+    }});
 
     // Logarithmic scaling configuration
-    const logScaleConfig = {
-        'engineering-headcount': { min: 10, max: 5000, useLog: true },
-        'company-headcount': { min: 100, max: 100000, useLog: true },
-        'end-users': { min: 100, max: 10000000, useLog: true },
-        'data-records': { min: 1, max: 1000, useLog: true },
-        'customer-accounts': { min: 10, max: 1000000, useLog: true },
-        'end-users-base': { min: 100, max: 10000000, useLog: true },
-        'data-records-base': { min: 1, max: 1000, useLog: true },
-        'num-repos': { min: 1, max: 10000, useLog: true },
-        'active-vulns': { min: 0, max: 10000, useLog: true },
-        'annual-revenue': { min: 1, max: 10000, useLog: true },
-        'operating-costs': { min: 1, max: 1000, useLog: true },
-        'total-employees': { min: 10, max: 50000, useLog: true },
-        'training-budget': { min: 10, max: 5000, useLog: true }
-    };
+    const logScaleConfig = {{
+        'engineering-headcount': {{ min: 10, max: 5000, useLog: true }},
+        'company-headcount': {{ min: 100, max: 100000, useLog: true }},
+        'end-users': {{ min: 100, max: 10000000, useLog: true }},
+        'data-records': {{ min: 1, max: 1000, useLog: true }},
+        'customer-accounts': {{ min: 10, max: 1000000, useLog: true }},
+        'end-users-base': {{ min: 100, max: 10000000, useLog: true }},
+        'data-records-base': {{ min: 1, max: 1000, useLog: true }},
+        'num-repos': {{ min: 1, max: 10000, useLog: true }},
+        'active-vulns': {{ min: 0, max: 10000, useLog: true }},
+        'annual-revenue': {{ min: 1, max: 10000, useLog: true }},
+        'operating-costs': {{ min: 1, max: 1000, useLog: true }},
+        'total-employees': {{ min: 10, max: 50000, useLog: true }},
+        'training-budget': {{ min: 10, max: 5000, useLog: true }}
+    }};
 
     // Initialize all metrics
     initializeMetric('security-org-size');
@@ -173,24 +67,24 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeMetric('security-budget');
     initializeMetric('training-culture');
 
-    function initializeMetric(metricId) {
+    function initializeMetric(metricId) {{
         const metricCard = document.getElementById(metricId + '-card');
         if (!metricCard) return;
 
         const sliders = metricCard.querySelectorAll('.slider[data-metric="' + metricId + '"]');
         
-        sliders.forEach(slider => {
+        sliders.forEach(slider => {{
             const input = document.getElementById(slider.id + '-input');
-            if (input) {
+            if (input) {{
                 setupLogarithmicSlider(slider, input);
                 syncSliderAndInput(slider, input, metricId);
-            }
-        });
+            }}
+        }});
 
         calculateMetric(metricId);
-    }
+    }}
 
-    function setupLogarithmicSlider(slider, input) {
+    function setupLogarithmicSlider(slider, input) {{
         const config = logScaleConfig[slider.id];
         if (!config || !config.useLog) return;
 
@@ -198,66 +92,66 @@ document.addEventListener('DOMContentLoaded', function () {
         slider.max = 100;
         const currentValue = parseFloat(input.value);
         slider.value = linearToLog(currentValue, config.min, config.max);
-    }
+    }}
 
-    function linearToLog(value, min, max) {
+    function linearToLog(value, min, max) {{
         if (value <= min) return 0;
         if (value >= max) return 100;
-        if (min === 0) {
+        if (min === 0) {{
             min = 0.1;
             if (value === 0) return 0;
-        }
+        }}
         const logMin = Math.log(min);
         const logMax = Math.log(max);
         const logValue = Math.log(value);
         return ((logValue - logMin) / (logMax - logMin)) * 100;
-    }
+    }}
 
-    function logToLinear(sliderValue, min, max) {
+    function logToLinear(sliderValue, min, max) {{
         if (sliderValue <= 0) return min;
         if (sliderValue >= 100) return max;
-        if (min === 0) {
+        if (min === 0) {{
             if (sliderValue === 0) return 0;
             min = 0.1;
-        }
+        }}
         const logMin = Math.log(min);
         const logMax = Math.log(max);
         const logValue = logMin + (sliderValue / 100) * (logMax - logMin);
         let result = Math.exp(logValue);
-        if (result < 1) {
+        if (result < 1) {{
             result = Math.round(result * 10) / 10;
-        } else {
+        }} else {{
             result = Math.round(result);
-        }
+        }}
         return Math.max(min === 0.1 ? 0 : min, Math.min(max, result));
-    }
+    }}
 
-    function syncSliderAndInput(slider, input, metricId) {
+    function syncSliderAndInput(slider, input, metricId) {{
         const config = logScaleConfig[slider.id];
         let isUserTyping = false;
         let typingTimeout;
 
-        slider.addEventListener('input', function () {
+        slider.addEventListener('input', function () {{
             if (isUserTyping) return;
-            if (config && config.useLog) {
+            if (config && config.useLog) {{
                 const linearValue = logToLinear(parseFloat(slider.value), config.min, config.max);
                 input.value = linearValue;
-            } else {
+            }} else {{
                 input.value = slider.value;
-            }
+            }}
             calculateMetric(metricId);
-        });
+        }});
 
-        input.addEventListener('input', function () {
+        input.addEventListener('input', function () {{
             isUserTyping = true;
             if (typingTimeout) clearTimeout(typingTimeout);
-            typingTimeout = setTimeout(() => {
+            typingTimeout = setTimeout(() => {{
                 let value = parseFloat(input.value);
-                if (config && config.useLog) {
-                    if (!isNaN(value)) {
+                if (config && config.useLog) {{
+                    if (!isNaN(value)) {{
                         slider.value = linearToLog(value, config.min, config.max);
-                    }
-                } else {
+                    }}
+                }} else {{
                     const min = parseFloat(slider.min);
                     const max = parseFloat(slider.max);
                     if (isNaN(value) || input.value === '') value = parseFloat(slider.value);
@@ -265,29 +159,29 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (value > max) value = max;
                     input.value = value;
                     slider.value = value;
-                }
+                }}
                 calculateMetric(metricId);
                 isUserTyping = false;
-            }, 300);
-        });
+            }}, 300);
+        }});
 
-        input.addEventListener('focus', function () {
+        input.addEventListener('focus', function () {{
             isUserTyping = true;
             if (typingTimeout) clearTimeout(typingTimeout);
-        });
-    }
+        }});
+    }}
 
-    function calculateMetric(metricId) {
-        switch (metricId) {
+    function calculateMetric(metricId) {{
+        switch (metricId) {{
             case 'security-org-size': calculateSecurityOrgSize(); break;
             case 'customer-base': calculateCustomerBase(); break;
             case 'vulnerability-management': calculateVulnManagement(); break;
             case 'security-budget': calculateSecurityBudget(); break;
             case 'training-culture': calculateTrainingCulture(); break;
-        }
-    }
+        }}
+    }}
 
-    function calculateSecurityOrgSize() {
+    function calculateSecurityOrgSize() {{
         const security = getInputValue('security-headcount');
         const engineering = getInputValue('engineering-headcount');
         const company = getInputValue('company-headcount');
@@ -298,9 +192,9 @@ document.addEventListener('DOMContentLoaded', function () {
         updateResult('security-vs-company-percent', (security / company) * 100, 'percentage', 'security_team_ratio.company');
         updateResult('users-per-security-person', Math.round(endUsers / security), 'number', 'users_per_security_person');
         updateResult('records-per-security-person', dataRecords / security, 'number', 'records_per_security_person', ' M');
-    }
+    }}
 
-    function calculateCustomerBase() {
+    function calculateCustomerBase() {{
         const customerAccounts = getInputValue('customer-accounts');
         const endUsers = getInputValue('end-users-base');
         const dataRecords = getInputValue('data-records-base');
@@ -318,9 +212,9 @@ document.addEventListener('DOMContentLoaded', function () {
         updateResult('users-per-customer', usersPerCustomer, 'number', 'users_per_customer');
         updateResult('records-per-customer', recordsPerCustomer, 'number', 'records_per_customer', ' K');
         updateResult('data-density-score', dataDensityScore, 'score', 'data_density_score');
-    }
+    }}
 
-    function calculateVulnManagement() {
+    function calculateVulnManagement() {{
         const repos = getInputValue('num-repos');
         const activeVulns = getInputValue('active-vulns');
         const exploitableVulns = getInputValue('exploitable-vulns');
@@ -331,9 +225,9 @@ document.addEventListener('DOMContentLoaded', function () {
         updateResult('vulns-per-repo', activeVulns / repos, 'number', 'vulns_per_repo');
         updateResult('exploitable-percentage', (exploitableVulns / activeVulns) * 100, 'percentage', 'exploitable_vuln_rate');
         updateResult('mean-time-to-fix', avgDaysOpen, 'number', 'mean_time_to_fix', ' days');
-    }
+    }}
 
-    function calculateSecurityBudget() {
+    function calculateSecurityBudget() {{
         const budget = getInputValue('security-budget') * 1000000;
         const revenue = getInputValue('annual-revenue') * 1000000;
         const opex = getInputValue('operating-costs') * 1000000;
@@ -344,9 +238,9 @@ document.addEventListener('DOMContentLoaded', function () {
         updateResult('budget-vs-opex', (budget / opex) * 100, 'percentage', 'budget_vs_opex');
         updateResult('budget-per-employee', budget / employees, 'currency', 'budget_per_employee');
         updateResult('cost-per-end-user', budget / endUsers, 'currency', 'cost_per_end_user');
-    }
+    }}
 
-    function calculateTrainingCulture() {
+    function calculateTrainingCulture() {{
         const trainingBudget = getInputValue('training-budget') * 1000;
         const employeesTrained = getInputValue('employees-trained');
         const totalEmployees = getInputValue('total-training-employees');
@@ -357,63 +251,171 @@ document.addEventListener('DOMContentLoaded', function () {
         updateResult('training-completion-rate', (employeesTrained / totalEmployees) * 100, 'percentage', 'training_completion_rate');
         updateResult('phishing-failure-rate', (phishingFailures / phishingTestsSent) * 100, 'percentage', 'phishing_failure_rate');
         updateResult('security-awareness-score', Math.max(0, 100 - ((phishingFailures / phishingTestsSent) * 100)), 'score', 'security_awareness_score');
-    }
+    }}
 
-    function getInputValue(id) {
+    function getInputValue(id) {{
         const element = document.getElementById(id);
         return element ? parseFloat(element.value) || 0 : 0;
-    }
+    }}
 
-    function updateResult(elementId, value, format, benchmarkKey, suffix = '') {
+    function updateResult(elementId, value, format, benchmarkKey, suffix = '') {{
         const element = document.getElementById(elementId);
         const benchmarkElement = document.getElementById(elementId + '-benchmark');
         if (!element) return;
 
         let displayValue;
-        switch (format) {
+        switch (format) {{
             case 'percentage': displayValue = value.toFixed(1) + '%'; break;
             case 'currency': displayValue = '$' + Math.round(value).toLocaleString(); break;
             case 'number': displayValue = value.toFixed(1) + suffix; break;
             case 'score': displayValue = Math.round(value) + '/100'; break;
             default: displayValue = value.toFixed(1);
-        }
+        }}
         element.textContent = displayValue;
 
-        if (benchmarkElement && benchmarkKey) {
+        if (benchmarkElement && benchmarkKey) {{
             updateBenchmark(benchmarkElement, value, benchmarkKey);
-        }
-    }
+        }}
+    }}
 
-    function updateBenchmark(element, value, benchmarkKey) {
+    function updateBenchmark(element, value, benchmarkKey) {{
         const benchmark = getBenchmark(benchmarkKey);
-        if (!benchmark) {
+        if (!benchmark) {{
             element.textContent = 'Calculating...';
             return;
-        }
+        }}
 
         let status, message;
-        if (value >= benchmark.healthy.min && value <= benchmark.healthy.max) {
+        if (value >= benchmark.healthy.min && value <= benchmark.healthy.max) {{
             status = 'healthy';
-            message = `Healthy: ${benchmark.healthy.min}-${benchmark.healthy.max}`;
-        } else if (benchmark.warning && value >= benchmark.warning.min && value <= benchmark.warning.max) {
+            message = `Healthy: ${{benchmark.healthy.min}}-${{benchmark.healthy.max}}`;
+        }} else if (benchmark.warning && value >= benchmark.warning.min && value <= benchmark.warning.max) {{
             status = 'warning';
-            message = `Warning: ${benchmark.warning.min}-${benchmark.warning.max}`;
-        } else {
+            message = `Warning: ${{benchmark.warning.min}}-${{benchmark.warning.max}}`;
+        }} else {{
             status = 'critical';
             message = 'Critical: Outside normal range';
-        }
+        }}
 
         element.textContent = message;
-        element.className = `benchmark ${status}`;
-    }
+        element.className = `benchmark ${{status}}`;
+    }}
 
-    function getBenchmark(key) {
+    function getBenchmark(key) {{
         const parts = key.split('.');
         let benchmark = benchmarks;
-        for (const part of parts) {
+        for (const part of parts) {{
             benchmark = benchmark[part];
             if (!benchmark) return null;
-        }
+        }}
         return benchmark;
-    }
-});
+    }}
+}});
+'''
+        return js_content
+
+class DevServer(SimpleHTTPRequestHandler):
+    def do_GET(self):
+        # Add cache-busting headers for development
+        if self.path == '/':
+            self.path = '/index.html'
+        
+        try:
+            super().do_GET()
+        except:
+            pass
+    
+    def end_headers(self):
+        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+        self.send_header('Pragma', 'no-cache')
+        self.send_header('Expires', '0')
+        super().end_headers()
+
+def watch_files(processor):
+    """Simple file watcher using polling"""
+    last_modified = {}
+    
+    def get_file_time(filepath):
+        try:
+            return os.path.getmtime(filepath)
+        except:
+            return 0
+    
+    def check_files():
+        changed = False
+        for root, dirs, files in os.walk('.'):
+            # Skip hidden directories and _site
+            dirs[:] = [d for d in dirs if not d.startswith('.') and d != '_site']
+            
+            for file in files:
+                if file.endswith(('.yml', '.yaml')):
+                    filepath = os.path.join(root, file)
+                    current_time = get_file_time(filepath)
+                    
+                    if filepath not in last_modified:
+                        last_modified[filepath] = current_time
+                    elif current_time > last_modified[filepath]:
+                        print(f"🔄 File changed: {{filepath}}")
+                        last_modified[filepath] = current_time
+                        changed = True
+        
+        if changed:
+            processor.load_data()
+            with open('script.js', 'w') as f:
+                f.write(processor.generate_calculator_js())
+            print("✅ Updated script.js with latest YAML data")
+    
+    # Initial check
+    check_files()
+    
+    # Watch for changes
+    import threading
+    def watch_loop():
+        while True:
+            time.sleep(2)  # Check every 2 seconds
+            check_files()
+    
+    watcher_thread = threading.Thread(target=watch_loop, daemon=True)
+    watcher_thread.start()
+
+def main():
+    print("🚀 Starting Jekyll-like development server...")
+    
+    # Install required packages if missing
+    try:
+        import yaml
+    except ImportError:
+        print("Installing PyYAML...")
+        os.system("pip3 install pyyaml")
+        import yaml
+    
+    # Initialize template processor
+    processor = TemplateProcessor()
+    
+    # Generate initial JavaScript file
+    with open('script.js', 'w') as f:
+        f.write(processor.generate_calculator_js())
+    print("✅ Generated script.js with YAML data")
+    
+    # Start file watcher
+    watch_files(processor)
+    
+    # Start HTTP server
+    PORT = 8000
+    
+    class TCPServer(socketserver.TCPServer):
+        allow_reuse_address = True
+    
+    try:
+        with TCPServer(("", PORT), DevServer) as httpd:
+            print(f"✅ Server running at http://localhost:{{PORT}}")
+            print("📁 Watching YAML files for changes...")
+            print("🔄 Auto-updating script.js when YAML changes")
+            print("Press Ctrl+C to stop")
+            
+            httpd.serve_forever()
+    except KeyboardInterrupt:
+        print("\n🛑 Stopping server...")
+
+if __name__ == "__main__":
+    main() 

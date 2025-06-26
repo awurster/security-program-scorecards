@@ -1,9 +1,35 @@
+# =============================================================================
+# SECURITY PROGRAM SCORECARDS - METRICS CONFIGURATION
+# =============================================================================
+# This file defines all the security metrics modules, their input controls,
+# and calculated results. Each module represents a different aspect of your
+# security program that can be measured and benchmarked.
+#
+# Structure:
+# - id: unique identifier for the module
+# - title: display name shown in the UI
+# - icon: Material Design icon name
+# - status: active/inactive (only active modules are shown)
+# - description: explanatory text for users
+# - controls: input sliders/fields that users can adjust
+# - results: calculated metrics displayed to users
+# =============================================================================
+
+
+# =============================================================================
+# SECURITY ORGANIZATION SIZE
+# =============================================================================
+# Measures the size and efficiency of your security team relative to your 
+# organization. Helps determine if you're properly staffed and how your 
+# security team scales with company growth.
+
 - id: security-org-size
-  title: Security Organization Size
+  title: Organization Size
   icon: people
   status: active
   description: "Track the size and efficiency of your security team relative to your organization"
   
+  # Input controls - what users can adjust
   controls:
     - id: security-headcount
       label: Security Team
@@ -20,33 +46,13 @@
       default: 500
       
     - id: company-headcount
-      label: Total Company
-      type: range
-      min: 50
-      max: 50000
-      default: 2500
-      
-    - id: customer-accounts
-      label: Customer Accounts
-      type: range
-      min: 10
-      max: 1000000
-      default: 5000
-      
-    - id: end-users
-      label: Total End Users
+      label: Total Employees
       type: range
       min: 100
-      max: 10000000
-      default: 25000
-      
-    - id: data-records
-      label: Data Records (millions)
-      type: range
-      min: 1
-      max: 1000
-      default: 50
-  
+      max: 100000
+      default: 1500
+
+  # Calculated results - what gets displayed
   results:
     - id: security-vs-eng-percent
       label: Security vs Engineering
@@ -67,6 +73,67 @@
       label: Data Records per Security Person (M)
       format: number
       benchmark_key: records_per_security_person
+
+
+# =============================================================================
+# CUSTOMER & USER BASE
+# =============================================================================
+# Tracks the scale of your customer base, end users, and data records.
+# This helps understand the scope of what your security team needs to protect
+# and provides context for other security metrics.
+
+- id: customer-base
+  title: Customer & User Base
+  icon: groups
+  status: active
+  description: "Track customer accounts, end users, and data records managed by your organization"
+  
+  # Input controls - scale of your business
+  controls:
+    - id: customer-accounts
+      label: Customer Accounts
+      type: range
+      min: 10
+      max: 1000000
+      default: 5000
+      
+    - id: end-users
+      label: Total End Users
+      type: range
+      min: 100
+      max: 10000000
+      default: 25000
+      
+    - id: data-records
+      label: Data Records (millions)
+      type: range
+      min: 1
+      max: 1000
+      default: 50
+
+  # Calculated efficiency and density metrics
+  results:
+    - id: users-per-customer
+      label: Average Users per Customer
+      format: number
+      benchmark_key: users_per_customer
+      
+    - id: records-per-customer
+      label: Data Records per Customer (K)
+      format: number
+      benchmark_key: records_per_customer
+      
+    - id: data-density-score
+      label: Data Density Score
+      format: score
+      benchmark_key: data_density_score
+
+
+# =============================================================================
+# VULNERABILITY MANAGEMENT
+# =============================================================================
+# Track vulnerability remediation metrics, SLA compliance, and program maturity
+# This module helps assess how well your organization manages security vulnerabilities
 
 - id: vulnerability-management
   title: Vulnerability Management
@@ -138,12 +205,20 @@
       format: number
       benchmark_key: mean_time_to_fix
 
+# =============================================================================
+# SECURITY BUDGET ANALYSIS
+# =============================================================================
+# Analyze security spending patterns, ROI calculations, and budget optimization.
+# Helps determine if security investments are appropriate for your organization
+# size and provides benchmarking against industry standards.
+
 - id: security-budget
   title: Security Budget Analysis
   icon: account_balance
   status: active
   description: "Analyze security spending patterns, ROI calculations, and budget optimization"
   
+  # Financial input controls
   controls:
     - id: security-budget
       label: Annual Security Budget ($M)
@@ -174,6 +249,7 @@
       max: 50000
       default: 2500
   
+  # Financial efficiency and ROI metrics
   results:
     - id: budget-vs-revenue
       label: Budget vs Revenue
@@ -195,12 +271,21 @@
       format: currency
       benchmark_key: cost_per_end_user
 
+
+# =============================================================================
+# SECURITY TRAINING & CULTURE
+# =============================================================================
+# Measure security awareness, training completion rates, and culture maturity.
+# A strong security culture is one of the most effective defenses against
+# social engineering and human error-based security incidents.
+
 - id: training-culture
   title: Security Training & Culture
   icon: school
   status: active
   description: "Measure security awareness, training completion rates, and culture maturity"
   
+  # Training program input controls
   controls:
     - id: training-budget
       label: Annual Training Budget ($K)
@@ -237,6 +322,7 @@
       max: 10000
       default: 720
   
+  # Training effectiveness and culture metrics
   results:
     - id: training-cost-per-employee
       label: Training Cost per Employee
@@ -256,4 +342,15 @@
     - id: security-awareness-score
       label: Security Awareness Score
       format: score
-      benchmark_key: security_awareness_score 
+      benchmark_key: security_awareness_score
+
+
+# =============================================================================
+# END OF METRICS CONFIGURATION
+# =============================================================================
+# To add new metrics modules:
+# 1. Copy the structure above with a new unique ID
+# 2. Add corresponding benchmark data in benchmarks.yml
+# 3. Update the JavaScript calculator in assets/js/calculator.js
+# 4. Test thoroughly with various input ranges
+# ============================================================================= 

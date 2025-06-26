@@ -117,6 +117,66 @@
                     </div>
                 </div>
 
+                <!-- Customer & User Base Card -->
+                <div class="metric-card" id="customer-base-card">
+                    <div class="card-header">
+                        <span class="material-icons">groups</span>
+                        <h3>Customer & User Base</h3>
+                    </div>
+
+                    <div class="metric-controls">
+                        <div class="slider-group">
+                            <label for="customer-accounts">Customer Accounts</label>
+                            <div class="slider-container">
+                                <input type="range" id="customer-accounts" min="10" max="1000000" value="5000"
+                                    class="slider" data-metric="customer-base">
+                                <input type="number" id="customer-accounts-input" min="10" max="1000000" value="5000"
+                                    class="number-input" data-metric="customer-base">
+                            </div>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="end-users-base">Total End Users</label>
+                            <div class="slider-container">
+                                <input type="range" id="end-users-base" min="100" max="10000000" value="25000"
+                                    class="slider" data-metric="customer-base">
+                                <input type="number" id="end-users-base-input" min="100" max="10000000" value="25000"
+                                    class="number-input" data-metric="customer-base">
+                            </div>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="data-records-base">Data Records (millions)</label>
+                            <div class="slider-container">
+                                <input type="range" id="data-records-base" min="1" max="1000" value="50" class="slider"
+                                    data-metric="customer-base">
+                                <input type="number" id="data-records-base-input" min="1" max="1000" value="50"
+                                    class="number-input" data-metric="customer-base">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results">
+                        <div class="result-item">
+                            <div class="result-value" id="users-per-customer">5.0</div>
+                            <div class="result-label">Average Users per Customer</div>
+                            <div class="benchmark" id="users-per-customer-benchmark">Healthy: 2-10</div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-value" id="records-per-customer">10.0 K</div>
+                            <div class="result-label">Data Records per Customer (K)</div>
+                            <div class="benchmark" id="records-per-customer-benchmark">Healthy: 1-10</div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-value" id="data-density-score">75</div>
+                            <div class="result-label">Data Density Score</div>
+                            <div class="benchmark" id="data-density-score-benchmark">Healthy: 70-100</div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Vulnerability Management Card -->
                 <div class="metric-card" id="vulnerability-management-card">
                     <div class="card-header">
