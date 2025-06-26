@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }, 100);
+
     // Benchmark data (would ideally be loaded from _data/benchmarks.yml)
     const benchmarks = {
         security_team_ratio: {
@@ -33,6 +34,15 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         users_per_security_person: {
             healthy: { min: 50, max: 400 }, warning: { min: 400, max: 800 }, critical: { min: 800, max: 2000 }
+        },
+        records_per_security_person: {
+            healthy: { min: 0.1, max: 5.0 }, warning: { min: 5.0, max: 15.0 }, critical: { min: 15.0, max: 50.0 }
+        },
+        vulns_per_repo: {
+            healthy: { min: 0, max: 2 }, warning: { min: 2, max: 5 }, critical: { min: 5, max: 20 }
+        },
+        exploitable_percentage: {
+            healthy: { min: 0, max: 5 }, warning: { min: 5, max: 15 }, critical: { min: 15, max: 50 }
         },
         vuln_sla_compliance: {
             healthy: { min: 85, max: 100 }, warning: { min: 70, max: 85 }, critical: { min: 0, max: 70 }
@@ -43,14 +53,26 @@ document.addEventListener('DOMContentLoaded', function () {
         budget_vs_revenue: {
             healthy: { min: 1.0, max: 3.0 }, warning: { min: 0.5, max: 1.0 }, critical: { min: 0.0, max: 0.5 }
         },
+        budget_vs_opex: {
+            healthy: { min: 2.0, max: 8.0 }, warning: { min: 1.0, max: 2.0 }, critical: { min: 0.0, max: 1.0 }
+        },
         budget_per_employee: {
             healthy: { min: 2000, max: 5000 }, warning: { min: 1000, max: 2000 }, critical: { min: 0, max: 1000 }
+        },
+        cost_per_end_user: {
+            healthy: { min: 50, max: 200 }, warning: { min: 20, max: 50 }, critical: { min: 0, max: 20 }
+        },
+        training_cost_per_employee: {
+            healthy: { min: 100, max: 500 }, warning: { min: 50, max: 100 }, critical: { min: 0, max: 50 }
         },
         training_completion_rate: {
             healthy: { min: 90, max: 100 }, warning: { min: 75, max: 90 }, critical: { min: 0, max: 75 }
         },
         phishing_failure_rate: {
             healthy: { min: 0, max: 5 }, warning: { min: 5, max: 15 }, critical: { min: 15, max: 50 }
+        },
+        security_awareness_score: {
+            healthy: { min: 85, max: 100 }, warning: { min: 70, max: 85 }, critical: { min: 0, max: 70 }
         }
     };
 
@@ -156,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
         updateResult('security-vs-eng-percent', securityVsEng, 'percentage', 'security_team_ratio.engineering');
         updateResult('security-vs-company-percent', securityVsCompany, 'percentage', 'security_team_ratio.company');
         updateResult('users-per-security-person', usersPerSecurity, 'number', 'users_per_security_person');
-        updateResult('records-per-security-person', recordsPerSecurity, 'number', null, ' M');
+        updateResult('records-per-security-person', recordsPerSecurity, 'number', 'records_per_security_person', ' M');
     }
 
     function calculateVulnManagement() {
@@ -173,8 +195,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Update displays
         updateResult('sla-compliance-rate', slaCompliance, 'percentage', 'vuln_sla_compliance');
-        updateResult('vulns-per-repo', vulnsPerRepo, 'number');
-        updateResult('exploitable-percentage', exploitablePercentage, 'percentage');
+        updateResult('vulns-per-repo', vulnsPerRepo, 'number', 'vulns_per_repo');
+        updateResult('exploitable-percentage', exploitablePercentage, 'percentage', 'exploitable_percentage');
         updateResult('mean-time-to-fix', avgDaysOpen, 'number', 'mean_time_to_fix', ' days');
     }
 
@@ -183,6 +205,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const revenue = getInputValue('annual-revenue') * 1000000;
         const opex = getInputValue('operating-costs') * 1000000;
         const employees = getInputValue('total-employees');
+
+        // Get end users from the security org size card - fallback to default if not found
         const endUsers = getInputValue('end-users') || 25000;
 
         // Calculate metrics
@@ -193,9 +217,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Update displays
         updateResult('budget-vs-revenue', budgetVsRevenue, 'percentage', 'budget_vs_revenue');
-        updateResult('budget-vs-opex', budgetVsOpex, 'percentage');
+        updateResult('budget-vs-opex', budgetVsOpex, 'percentage', 'budget_vs_opex');
         updateResult('budget-per-employee', budgetPerEmployee, 'currency', 'budget_per_employee');
-        updateResult('cost-per-end-user', costPerEndUser, 'currency');
+        updateResult('cost-per-end-user', costPerEndUser, 'currency', 'cost_per_end_user');
     }
 
     function calculateTrainingCulture() {
@@ -212,10 +236,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const awarenessScore = Math.max(0, 100 - phishingFailureRate);
 
         // Update displays
-        updateResult('training-cost-per-employee', trainingCostPerEmployee, 'currency');
+        updateResult('training-cost-per-employee', trainingCostPerEmployee, 'currency', 'training_cost_per_employee');
         updateResult('training-completion-rate', trainingCompletionRate, 'percentage', 'training_completion_rate');
         updateResult('phishing-failure-rate', phishingFailureRate, 'percentage', 'phishing_failure_rate');
-        updateResult('security-awareness-score', awarenessScore, 'score');
+        updateResult('security-awareness-score', awarenessScore, 'score', 'security_awareness_score');
     }
 
     function getInputValue(id) {
@@ -258,7 +282,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateBenchmark(element, value, benchmarkKey) {
         const benchmark = getBenchmark(benchmarkKey);
-        if (!benchmark) return;
+        if (!benchmark) {
+            element.textContent = 'Calculating...';
+            return;
+        }
 
         let status = '';
         let message = '';
@@ -266,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (value >= benchmark.healthy.min && value <= benchmark.healthy.max) {
             status = 'healthy';
             message = `Healthy: ${benchmark.healthy.min}-${benchmark.healthy.max}`;
-        } else if (value >= benchmark.warning.min && value <= benchmark.warning.max) {
+        } else if (benchmark.warning && value >= benchmark.warning.min && value <= benchmark.warning.max) {
             status = 'warning';
             message = `Warning: ${benchmark.warning.min}-${benchmark.warning.max}`;
         } else {
