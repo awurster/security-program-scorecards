@@ -17,10 +17,10 @@
     --text-secondary: #8b949e;
     --text-muted: #656d76;
 
-    /* Neon Yellow Accent */
-    --accent-primary: #f7df1e;
-    --accent-glow: #ffff00;
-    --accent-muted: #d4c619;
+    /* Neon Yellow Accent - Toned Down */
+    --accent-primary: #d4c619;
+    --accent-glow: #f7df1e;
+    --accent-muted: #b8a817;
 
     /* Status Colors */
     --success: #238636;
@@ -89,31 +89,10 @@ input,
     margin-bottom: 8px;
 }
 
-.logo-icon {
-    position: relative;
-    display: inline-block;
-}
-
-.logo-icon .shield-icon {
-    font-size: 32px;
-    color: var(--accent-primary);
-    filter: drop-shadow(0 0 8px var(--accent-glow));
-}
-
-.logo-icon .heart-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 16px;
-    color: var(--bg-primary);
-    z-index: 2;
-}
-
 .logo .material-icons {
     font-size: 32px;
     color: var(--accent-primary);
-    filter: drop-shadow(0 0 8px var(--accent-glow));
+    filter: drop-shadow(0 0 4px rgba(247, 223, 30, 0.4));
 }
 
 .logo h1 {
