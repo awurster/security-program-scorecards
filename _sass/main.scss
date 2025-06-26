@@ -44,6 +44,20 @@ body {
         radial-gradient(circle at 75% 75%, rgba(247, 223, 30, 0.05) 0%, transparent 50%);
     min-height: 100vh;
     font-size: 14px;
+
+    /* Ensure normal browser shortcuts work */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+/* Allow text selection for inputs and results */
+input,
+.result-value,
+.benchmark {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    user-select: text;
 }
 
 .container {
@@ -141,6 +155,11 @@ body {
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     backdrop-filter: blur(8px);
+
+    /* Ensure cards don't interfere with keyboard shortcuts */
+    pointer-events: auto;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .metric-card:hover {
@@ -277,6 +296,19 @@ body {
     box-shadow:
         0 0 0 2px rgba(247, 223, 30, 0.4),
         0 2px 8px rgba(247, 223, 30, 0.1);
+}
+
+/* Prevent any elements from capturing keyboard shortcuts */
+* {
+    outline: none;
+}
+
+/* Re-enable focus outlines for accessibility on interactive elements */
+input:focus,
+button:focus,
+.slider:focus {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
 }
 
 /* Results */

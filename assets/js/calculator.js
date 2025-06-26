@@ -1,5 +1,30 @@
 // Security Program Calculator - Multi-Metric Support
 document.addEventListener('DOMContentLoaded', function () {
+    // Ensure browser shortcuts work properly and don't get captured
+    document.addEventListener('keydown', function (e) {
+        // Allow all browser shortcuts with modifier keys to work normally
+        if (e.metaKey || e.ctrlKey) {
+            // Don't prevent default for browser shortcuts
+            return true;
+        }
+    });
+
+    // Remove focus from any elements that might interfere with shortcuts
+    document.addEventListener('click', function (e) {
+        // If clicking outside of inputs/sliders, remove focus
+        if (!e.target.matches('input, .slider')) {
+            document.activeElement.blur();
+        }
+    });
+
+    // Ensure no elements have unwanted tabindex attributes
+    setTimeout(() => {
+        document.querySelectorAll('[tabindex]').forEach(el => {
+            if (!el.matches('input, button, .slider')) {
+                el.removeAttribute('tabindex');
+            }
+        });
+    }, 100);
     // Benchmark data (would ideally be loaded from _data/benchmarks.yml)
     const benchmarks = {
         security_team_ratio: {
