@@ -76,6 +76,26 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
+    // Logarithmic scaling configuration for sliders with wide ranges
+    const logScaleConfig = {
+        'engineering-headcount': { min: 10, max: 5000, useLog: true },
+        'company-headcount': { min: 50, max: 50000, useLog: true },
+        'end-users': { min: 100, max: 10000000, useLog: true },
+        'data-records': { min: 1, max: 1000, useLog: true },
+        'num-repos': { min: 1, max: 10000, useLog: true },
+        'active-vulns': { min: 0, max: 10000, useLog: true },
+        'exploitable-vulns': { min: 0, max: 1000, useLog: true },
+        'vulns-past-sla': { min: 0, max: 1000, useLog: true },
+        'annual-revenue': { min: 1, max: 10000, useLog: true },
+        'operating-costs': { min: 1, max: 1000, useLog: true },
+        'total-employees': { min: 10, max: 50000, useLog: true },
+        'training-budget': { min: 10, max: 5000, useLog: true },
+        'employees-trained': { min: 10, max: 50000, useLog: true },
+        'total-training-employees': { min: 10, max: 50000, useLog: true },
+        'phishing-tests-sent': { min: 100, max: 100000, useLog: true },
+        'phishing-failures': { min: 0, max: 10000, useLog: true }
+    };
+
     // Initialize all metrics
     initializeMetric('security-org-size');
     initializeMetric('vulnerability-management');
@@ -94,6 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
         sliders.forEach(slider => {
             const input = document.getElementById(slider.id + '-input');
             if (input) {
+                setupLogarithmicSlider(slider, input);
                 syncSliderAndInput(slider, input, metricId);
             }
         });
@@ -102,9 +123,74 @@ document.addEventListener('DOMContentLoaded', function () {
         calculateMetric(metricId);
     }
 
+    function setupLogarithmicSlider(slider, input) {
+        const config = logScaleConfig[slider.id];
+        if (!config || !config.useLog) return;
+
+        // Convert slider to use 0-100 range for smooth logarithmic scaling
+        slider.min = 0;
+        slider.max = 100;
+
+        // Set initial slider position based on current input value
+        const currentValue = parseFloat(input.value);
+        slider.value = linearToLog(currentValue, config.min, config.max);
+    }
+
+    function linearToLog(value, min, max) {
+        if (value <= min) return 0;
+        if (value >= max) return 100;
+
+        // Handle zero values for ranges that include zero
+        if (min === 0) {
+            min = 0.1; // Use small positive number for log calculation
+            if (value === 0) return 0;
+        }
+
+        const logMin = Math.log(min);
+        const logMax = Math.log(max);
+        const logValue = Math.log(value);
+
+        return ((logValue - logMin) / (logMax - logMin)) * 100;
+    }
+
+    function logToLinear(sliderValue, min, max) {
+        if (sliderValue <= 0) return min;
+        if (sliderValue >= 100) return max;
+
+        // Handle zero values for ranges that include zero
+        if (min === 0) {
+            if (sliderValue === 0) return 0;
+            min = 0.1; // Use small positive number for log calculation
+        }
+
+        const logMin = Math.log(min);
+        const logMax = Math.log(max);
+        const logValue = logMin + (sliderValue / 100) * (logMax - logMin);
+
+        let result = Math.exp(logValue);
+
+        // Round to appropriate precision
+        if (result < 1) {
+            result = Math.round(result * 10) / 10;
+        } else if (result < 100) {
+            result = Math.round(result);
+        } else {
+            result = Math.round(result);
+        }
+
+        return Math.max(min === 0.1 ? 0 : min, Math.min(max, result));
+    }
+
     function syncSliderAndInput(slider, input, metricId) {
+        const config = logScaleConfig[slider.id];
+
         slider.addEventListener('input', function () {
-            input.value = slider.value;
+            if (config && config.useLog) {
+                const linearValue = logToLinear(parseFloat(slider.value), config.min, config.max);
+                input.value = linearValue;
+            } else {
+                input.value = slider.value;
+            }
             calculateMetric(metricId);
         });
 
@@ -112,34 +198,58 @@ document.addEventListener('DOMContentLoaded', function () {
             // Allow empty input for user editing
             if (input.value === '') return;
 
-            const min = parseFloat(slider.min);
-            const max = parseFloat(slider.max);
             let value = parseFloat(input.value);
-
             if (isNaN(value)) return;
 
-            if (value < min) value = min;
-            if (value > max) value = max;
+            if (config && config.useLog) {
+                // Clamp to valid range
+                if (value < config.min) value = config.min;
+                if (value > config.max) value = config.max;
 
-            input.value = value;
-            slider.value = value;
+                input.value = value;
+                slider.value = linearToLog(value, config.min, config.max);
+            } else {
+                const min = parseFloat(slider.getAttribute('data-original-min') || slider.min);
+                const max = parseFloat(slider.getAttribute('data-original-max') || slider.max);
+
+                if (value < min) value = min;
+                if (value > max) value = max;
+
+                input.value = value;
+                slider.value = value;
+            }
+
             calculateMetric(metricId);
         });
 
         input.addEventListener('blur', function () {
-            const min = parseFloat(slider.min);
-            const max = parseFloat(slider.max);
             let value = parseFloat(input.value);
 
-            if (isNaN(value) || input.value === '') {
-                value = parseFloat(slider.value);
+            if (config && config.useLog) {
+                if (isNaN(value) || input.value === '') {
+                    value = logToLinear(parseFloat(slider.value), config.min, config.max);
+                }
+
+                if (value < config.min) value = config.min;
+                if (value > config.max) value = config.max;
+
+                input.value = value;
+                slider.value = linearToLog(value, config.min, config.max);
+            } else {
+                const min = parseFloat(slider.getAttribute('data-original-min') || slider.min);
+                const max = parseFloat(slider.getAttribute('data-original-max') || slider.max);
+
+                if (isNaN(value) || input.value === '') {
+                    value = parseFloat(slider.value);
+                }
+
+                if (value < min) value = min;
+                if (value > max) value = max;
+
+                input.value = value;
+                slider.value = value;
             }
 
-            if (value < min) value = min;
-            if (value > max) value = max;
-
-            input.value = value;
-            slider.value = value;
             calculateMetric(metricId);
         });
     }
