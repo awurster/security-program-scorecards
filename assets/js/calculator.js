@@ -23,14 +23,40 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         input.addEventListener('input', function () {
+            // Allow empty input for user editing
+            if (input.value === '') {
+                return; // Don't validate while user is typing
+            }
+
             // Validate input bounds
             const min = parseInt(slider.min);
             const max = parseInt(slider.max);
             let value = parseInt(input.value);
 
+            if (isNaN(value)) {
+                return; // Allow user to continue typing
+            }
+
             if (value < min) value = min;
             if (value > max) value = max;
-            if (isNaN(value)) value = parseInt(slider.value);
+
+            input.value = value;
+            slider.value = value;
+            calculateMetrics();
+        });
+
+        input.addEventListener('blur', function () {
+            // On blur, ensure we have a valid value
+            const min = parseInt(slider.min);
+            const max = parseInt(slider.max);
+            let value = parseInt(input.value);
+
+            if (isNaN(value) || input.value === '') {
+                value = parseInt(slider.value); // Fall back to slider value
+            }
+
+            if (value < min) value = min;
+            if (value > max) value = max;
 
             input.value = value;
             slider.value = value;
