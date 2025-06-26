@@ -1,0 +1,125 @@
+# Security Program Benchmarks
+# Organized by company size and industry for easy customization
+
+company_sizes:
+  startup:
+    name: "Startup"
+    employee_range: "10-100"
+    
+  small:
+    name: "Small Company" 
+    employee_range: "100-500"
+    
+  medium:
+    name: "Medium Company"
+    employee_range: "500-2500"
+    
+  large:
+    name: "Large Company"
+    employee_range: "2500-10000"
+    
+  enterprise:
+    name: "Enterprise"
+    employee_range: "10000+"
+
+industries:
+  technology:
+    name: "Technology"
+    risk_multiplier: 1.2
+    
+  financial:
+    name: "Financial Services"
+    risk_multiplier: 1.5
+    
+  healthcare:
+    name: "Healthcare"
+    risk_multiplier: 1.4
+    
+  retail:
+    name: "Retail"
+    risk_multiplier: 1.0
+    
+  manufacturing:
+    name: "Manufacturing"
+    risk_multiplier: 0.9
+
+# Benchmark Templates
+benchmarks:
+  # Security Organization Size
+  security_team_ratio:
+    engineering:
+      healthy: { min: 1.0, max: 2.5 }
+      warning: { min: 0.5, max: 1.0 }
+      critical: { min: 0.0, max: 0.5 }
+    company:
+      healthy: { min: 1.0, max: 2.0 }
+      warning: { min: 0.5, max: 1.0 }
+      critical: { min: 0.0, max: 0.5 }
+  
+  users_per_security_person:
+    startup:
+      healthy: { min: 50, max: 200 }
+      warning: { min: 200, max: 500 }
+      critical: { min: 500, max: 1000 }
+    enterprise:
+      healthy: { min: 100, max: 400 }
+      warning: { min: 400, max: 800 }
+      critical: { min: 800, max: 2000 }
+  
+  # Vulnerability Management
+  vuln_sla_compliance:
+    critical:
+      healthy: { min: 90, max: 100 }
+      warning: { min: 75, max: 90 }
+      critical: { min: 0, max: 75 }
+    high:
+      healthy: { min: 85, max: 100 }
+      warning: { min: 70, max: 85 }
+      critical: { min: 0, max: 70 }
+  
+  mean_time_to_fix:
+    critical_vulns:
+      healthy: { min: 0, max: 7 }    # days
+      warning: { min: 7, max: 30 }
+      critical: { min: 30, max: 90 }
+    high_vulns:
+      healthy: { min: 0, max: 30 }   # days
+      warning: { min: 30, max: 90 }
+      critical: { min: 90, max: 180 }
+  
+  # Security Budget
+  budget_per_employee:
+    technology:
+      healthy: { min: 2000, max: 5000 }  # USD per year
+      warning: { min: 1000, max: 2000 }
+      critical: { min: 0, max: 1000 }
+    financial:
+      healthy: { min: 3000, max: 8000 }
+      warning: { min: 1500, max: 3000 }
+      critical: { min: 0, max: 1500 }
+  
+  budget_vs_revenue:
+    technology:
+      healthy: { min: 1.0, max: 3.0 }    # percentage
+      warning: { min: 0.5, max: 1.0 }
+      critical: { min: 0.0, max: 0.5 }
+    financial:
+      healthy: { min: 2.0, max: 5.0 }
+      warning: { min: 1.0, max: 2.0 }
+      critical: { min: 0.0, max: 1.0 }
+  
+  # Security Training
+  training_cost_per_employee:
+    healthy: { min: 200, max: 500 }      # USD per year
+    warning: { min: 100, max: 200 }
+    critical: { min: 0, max: 100 }
+  
+  training_completion_rate:
+    healthy: { min: 90, max: 100 }       # percentage
+    warning: { min: 75, max: 90 }
+    critical: { min: 0, max: 75 }
+  
+  phishing_failure_rate:
+    healthy: { min: 0, max: 5 }          # percentage (lower is better)
+    warning: { min: 5, max: 15 }
+    critical: { min: 15, max: 50 } 

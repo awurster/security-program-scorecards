@@ -2,7 +2,7 @@
   title: Security Organization Size
   icon: people
   status: active
-  description: "Track the size of your security team relative to engineering and company headcount"
+  description: "Track the size and efficiency of your security team relative to your organization"
   
   controls:
     - id: security-headcount
@@ -25,62 +25,235 @@
       min: 50
       max: 50000
       default: 2500
+      
+    - id: customer-accounts
+      label: Customer Accounts
+      type: range
+      min: 10
+      max: 1000000
+      default: 5000
+      
+    - id: end-users
+      label: Total End Users
+      type: range
+      min: 100
+      max: 10000000
+      default: 25000
+      
+    - id: data-records
+      label: Data Records (millions)
+      type: range
+      min: 1
+      max: 1000
+      default: 50
   
   results:
     - id: security-vs-eng-percent
       label: Security vs Engineering
       format: percentage
-      benchmark: "Healthy: 1-2%"
+      benchmark_key: security_team_ratio.engineering
       
     - id: security-vs-company-percent
       label: Security vs Company
       format: percentage
-      benchmark: "Healthy: 1-2%"
+      benchmark_key: security_team_ratio.company
+      
+    - id: users-per-security-person
+      label: Users per Security Person
+      format: number
+      benchmark_key: users_per_security_person
+      
+    - id: records-per-security-person
+      label: Data Records per Security Person (M)
+      format: number
+      benchmark_key: records_per_security_person
 
 - id: vulnerability-management
   title: Vulnerability Management
   icon: bug_report
-  status: coming-soon
-  description: "Track your vulnerability remediation metrics, SLA compliance, and program maturity."
+  status: active
+  description: "Track your vulnerability remediation metrics, SLA compliance, and program maturity"
   
-  preview_metrics:
-    - icon: trending_down
-      name: Mean Time to Resolution
+  controls:
+    - id: num-repos
+      label: Code Repositories
+      type: range
+      min: 1
+      max: 10000
+      default: 250
       
-    - icon: schedule
-      name: SLA Compliance Rate
+    - id: num-services
+      label: Services/Applications
+      type: range
+      min: 1
+      max: 1000
+      default: 50
       
-    - icon: assessment
-      name: Risk Score Trends
+    - id: active-vulns
+      label: All Active Vulnerabilities
+      type: range
+      min: 0
+      max: 10000
+      default: 850
+      
+    - id: exploitable-vulns
+      label: Active Exploitable Vulns
+      type: range
+      min: 0
+      max: 1000
+      default: 45
+      
+    - id: vulns-past-sla
+      label: Vulnerabilities Past SLA
+      type: range
+      min: 0
+      max: 1000
+      default: 12
+      
+    - id: avg-days-open
+      label: Average Days Open
+      type: range
+      min: 1
+      max: 365
+      default: 45
+  
+  results:
+    - id: sla-compliance-rate
+      label: SLA Compliance Rate
+      format: percentage
+      benchmark_key: vuln_sla_compliance
+      
+    - id: vulns-per-repo
+      label: Vulnerabilities per Repository
+      format: number
+      benchmark_key: vulns_per_repo
+      
+    - id: exploitable-percentage
+      label: Exploitable Vulnerability Rate
+      format: percentage
+      benchmark_key: exploitable_vuln_rate
+      
+    - id: mean-time-to-fix
+      label: Mean Time to Fix (days)
+      format: number
+      benchmark_key: mean_time_to_fix
 
 - id: security-budget
   title: Security Budget Analysis
   icon: account_balance
-  status: coming-soon
-  description: "Analyze security spending patterns, ROI calculations, and budget optimization."
+  status: active
+  description: "Analyze security spending patterns, ROI calculations, and budget optimization"
   
-  preview_metrics:
-    - icon: attach_money
-      name: Budget vs Revenue %
+  controls:
+    - id: security-budget
+      label: Annual Security Budget ($M)
+      type: range
+      min: 0.1
+      max: 100
+      default: 2.5
+      step: 0.1
       
-    - icon: trending_up
-      name: Security ROI Calculator
+    - id: operating-costs
+      label: Annual Operating Costs ($M) 
+      type: range
+      min: 1
+      max: 1000
+      default: 50
       
-    - icon: pie_chart
-      name: Spend Distribution
+    - id: annual-revenue
+      label: Annual Revenue ($M)
+      type: range
+      min: 1
+      max: 10000
+      default: 250
+      
+    - id: total-employees
+      label: Total Employees
+      type: range
+      min: 10
+      max: 50000
+      default: 2500
+  
+  results:
+    - id: budget-vs-revenue
+      label: Budget vs Revenue
+      format: percentage
+      benchmark_key: budget_vs_revenue
+      
+    - id: budget-vs-opex
+      label: Budget vs Operating Costs
+      format: percentage
+      benchmark_key: budget_vs_opex
+      
+    - id: budget-per-employee
+      label: Budget per Employee
+      format: currency
+      benchmark_key: budget_per_employee
+      
+    - id: cost-per-end-user
+      label: Cost per End User
+      format: currency
+      benchmark_key: cost_per_end_user
 
 - id: training-culture
   title: Security Training & Culture
   icon: school
-  status: coming-soon
-  description: "Measure security awareness, training completion rates, and culture maturity."
+  status: active
+  description: "Measure security awareness, training completion rates, and culture maturity"
   
-  preview_metrics:
-    - icon: psychology
-      name: Awareness Score
+  controls:
+    - id: training-budget
+      label: Annual Training Budget ($K)
+      type: range
+      min: 10
+      max: 5000
+      default: 250
       
-    - icon: task_alt
-      name: Training Completion
+    - id: employees-trained
+      label: Employees Completed Training
+      type: range
+      min: 10
+      max: 50000
+      default: 2200
       
-    - icon: groups
-      name: Culture Maturity Index 
+    - id: total-training-employees
+      label: Total Employees (Training Target)
+      type: range
+      min: 10
+      max: 50000
+      default: 2500
+      
+    - id: phishing-tests-sent
+      label: Phishing Tests Sent
+      type: range
+      min: 100
+      max: 100000
+      default: 12000
+      
+    - id: phishing-failures
+      label: Phishing Test Failures
+      type: range
+      min: 0
+      max: 10000
+      default: 720
+  
+  results:
+    - id: training-cost-per-employee
+      label: Training Cost per Employee
+      format: currency
+      benchmark_key: training_cost_per_employee
+      
+    - id: training-completion-rate
+      label: Training Completion Rate
+      format: percentage
+      benchmark_key: training_completion_rate
+      
+    - id: phishing-failure-rate
+      label: Phishing Failure Rate
+      format: percentage
+      benchmark_key: phishing_failure_rate
+      
+    - id: security-awareness-score
+      label: Security Awareness Score
+      format: score
+      benchmark_key: security_awareness_score 
